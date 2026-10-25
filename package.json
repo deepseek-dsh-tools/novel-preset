@@ -1,0 +1,22 @@
+{
+  "name": "novel-preset",
+  "version": "1.0.0",
+  "private": true,
+  "description": "写小说模式 agent preset：纯声明式（零 js），给长篇写作留窗口 —— 2026-10-25 从宿主 dump-config 复原",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "files": [
+    "cordis.patch.yml"
+  ],
+  "keywords": [
+    "deepseek",
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "preset",
+    "novel"
+  ]
+}
