@@ -18,5 +18,8 @@
     "dsh-plugin",
     "preset",
     "novel"
-  ]
+  ],
+  "engines": {
+    "node": ">=20"
+  }
 }
