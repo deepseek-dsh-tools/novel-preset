@@ -4,6 +4,7 @@
   "private": true,
   "description": "写小说模式 agent preset：纯声明式（零 js），给长篇写作留窗口 —— 2026-10-25 从宿主 dump-config 复原",
   "dsh": {
+    "manifestVersion": 1,
     "bundle": {
       "patch": "./cordis.patch.yml"
     }
