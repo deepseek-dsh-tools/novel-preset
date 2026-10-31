@@ -1,0 +1,68 @@
+# novel-preset bundle patch：只注册一个 agent preset（写小说模式）。
+# 内容来自 2026-10-25 宿主 dump-config 的宿合成结果（源码 2026-10-24 被官方安装包连带删除，
+# 原包零 js 文件，此处按 dump 原文复原，只删了 dump 里的分隔注释）。
+# 配置改动请改 profile 的 cordis.patch.yml 顶层同 id 覆盖，不要在这里加 config。
+- insert:
+    - id: preset-novel
+      # 与 bili 给 standard/ptc/minimal/cordis 加的那四行同义（bili 的 dsh.bundle.patch.yml:32-39）：
+      # 让 preset 树等 bili 的装载期 overlay 到位再启，否则切到写作模式时存在
+      # 「preset 树先装载、compaction gate 后到」的竞态窗口，窗口内宿主原生压缩与 bili 并存
+      # （bili 注释原话：make each Web preset wait for the load-time overlay）。
+      inject: [biliBasicCompactionPolicy]
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: novel
+        name: 写小说模式
+        description: 精简预设：保留文件读写、搜索与终端，去掉项目说明、技能目录、子智能体与计划模式。适合长篇写作与长上下文对话，为正文留出更多窗口。
+        order: 5
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: ''
+          - id: time-context
+            name: '@deepseek-ai/dsh-time-context'
+          - id: tool-bash
+            name: '@deepseek-ai/dsh-tool-bash'
+            disabled: !!js process.platform === 'win32'
+          - id: tool-pwsh
+            name: '@deepseek-ai/dsh-tool-pwsh'
+            disabled: !!js process.platform !== 'win32'
+          - id: tool-fs
+            name: '@deepseek-ai/dsh-tool-fs'
+          - id: tool-fs-search
+            name: '@deepseek-ai/dsh-tool-fs-search'
+            config:
+              sampleOverCapGlobResults: false
+          - id: tool-jobs
+            name: '@deepseek-ai/dsh-tool-jobs'
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+              toolResultPruner: true
+            config:
+              - id: compaction-basic
+                name: '@deepseek-ai/dsh-compaction-basic'
+              - id: command-compact
+                name: '@deepseek-ai/dsh-command-compact'
+              - id: tool-result-pruner
+                name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+                config:
+                  thresholdChars: 8192
+                  headChars: 4096
+                  tailChars: 1024
+          - id: tool-ask-user
+            name: '@deepseek-ai/dsh-tool-ask-user'
+          - id: tool-todo
+            name: '@deepseek-ai/dsh-tool-todo'
+            config:
+              allowParallelInProgress: true
+          - id: tool-web
+            name: '@deepseek-ai/dsh-tool-web'
+            config:
+              fetch: true
+              searchTimeoutMs: 60000
+          - id: present
+            name: '@deepseek-ai/dsh-tool-present'

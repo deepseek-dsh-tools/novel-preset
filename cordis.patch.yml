@@ -4,11 +4,9 @@
 # 配置改动请改 profile 的 cordis.patch.yml 顶层同 id 覆盖，不要在这里加 config。
 - insert:
     - id: preset-novel
-      # 与 bili 给 standard/ptc/minimal/cordis 加的那四行同义（bili 的 dsh.bundle.patch.yml:32-39）：
-      # 让 preset 树等 bili 的装载期 overlay 到位再启，否则切到写作模式时存在
-      # 「preset 树先装载、compaction gate 后到」的竞态窗口，窗口内宿主原生压缩与 bili 并存
-      # （bili 注释原话：make each Web preset wait for the load-time overlay）。
-      inject: [biliBasicCompactionPolicy]
+      # 2026-10-30: 删掉了原来这行 inject: [biliBasicCompactionPolicy]。
+      # bili（billion-context）已退休、服务无人提供 ⇒ preset 挂不起来 ⇒ 写小说模式消失。
+      # 现在压缩由 dsh-context-forge 接管（host 层），preset 内不需要等任何外部服务。
       name: '@deepseek-ai/dsh-agent-preset'
       config:
         id: novel
